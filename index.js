@@ -21,8 +21,7 @@ var AudioRecorder = {
             path,
             recordingOptions.SampleRate,
             recordingOptions.Channels,
-            recordingOptions.AudioQuality,
-            recordingOptions.AudioEncoding
+            recordingOptions.AudioQuality
         );
 
         if (this.progressSubscription) this.progressSubscription.remove();
