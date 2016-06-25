@@ -1,0 +1,7 @@
+rootProject.name = 'Example'
+
+include ':app'
+include ':react-native-vunun-recorder'
+project(':react-native-vunun-recorder').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vunun-recorder/android')
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fs/android')

@@ -11,7 +11,7 @@
     "url": "git+https://github.com/damly/react-native-vunun-recorder.git"
   },
   "keywords": [
-    "audio/video",
+    "audio(AAC)/video",
     "recorder"
   ],
   "author": "damly",
@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/damly/react-native-vunun-recorder/issues"
   },
-  "homepage": "https://github.com/damly/react-native-vunun-recorder#readme"
+  "homepage": "https://github.com/damly/react-native-vunun-recorder#readme",
+  "nativePackage": true,
+  "rnpm": {
+    "android": {
+      "packageInstance": "new AudioRecorderManagerPackage()"
+    },
+    "ios": {
+      "project": "ios/RNRecorder.xcodeproj"
+    }
+  }
 }
