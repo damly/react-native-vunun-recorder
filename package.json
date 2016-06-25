@@ -1,0 +1,23 @@
+{
+  "name": "react-native-vunun-recorder",
+  "version": "1.0.0",
+  "description": "react native recorder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damly/react-native-vunun-recorder.git"
+  },
+  "keywords": [
+    "audio/video",
+    "recorder"
+  ],
+  "author": "damly",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/damly/react-native-vunun-recorder/issues"
+  },
+  "homepage": "https://github.com/damly/react-native-vunun-recorder#readme"
+}
