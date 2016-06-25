@@ -27,7 +27,7 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
     private double sampleRate = 44100.0;
     private int    channels = 2;
     private String audioQuality = "High";
-    private String TAG = "wangyuman";
+    private String TAG = "Recorder";
 
     public AudioRecorderManagerModule(ReactApplicationContext reactContext) {
         super(reactContext);
