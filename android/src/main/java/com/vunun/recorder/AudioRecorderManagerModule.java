@@ -169,6 +169,7 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
         }
 
         try {
+            stopRecording();
             audioPlayer = new MediaPlayer();
             audioPlayer.reset();
             audioPlayer.setDataSource(audioFileName);
@@ -192,6 +193,31 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void playAudio(String file) {
+        try {
+            stopRecording();
+            audioPlayer = new MediaPlayer();
+            audioPlayer.reset();
+            audioPlayer.setDataSource(file);
+            audioPlayer.prepare();
+            audioPlayer.start();
+            startProgress();
+            audioPlayer.setOnCompletionListener(new OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    audioPlayer.reset();
+                    audioPlayer.release();
+                    audioPlayer = null;
+                    stopProgress();
+                    recordingSuccess();
+                }
+            });
+        }catch (IOException ex) {
+            recordingFail("playAudio:"+ex.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void stopPlaying() {
         if(audioPlayer != null) {
             audioPlayer.stop();
@@ -199,4 +225,5 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
             stopProgress();
         }
     }
+
 }

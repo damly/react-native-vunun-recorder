@@ -199,6 +199,34 @@ RCT_EXPORT_METHOD(playRecording)
     }
 }
 
+RCT_EXPORT_METHOD(playAudio:(NSString *)path)
+{
+    if (_audioRecorder.recording) {
+        NSLog(@"stop the recording before playing");
+        return;
+        
+    } else {
+        
+        NSError *error;
+        
+        if (!_audioPlayer.playing) {
+            NSURL *audioFileURL = [NSURL fileURLWithPath:path];
+            _audioPlayer = [[AVAudioPlayer alloc]
+                            initWithContentsOfURL:audioFileURL
+                            error:&error];
+            
+            if (error) {
+                [self stopProgressTimer];
+                NSLog(@"audio playback loading error: %@", [error localizedDescription]);
+                // TODO: dispatch error over the bridge
+            } else {
+                [self startProgressTimer];
+                [_audioPlayer play];
+            }
+        }
+    }
+}
+
 RCT_EXPORT_METHOD(pausePlaying)
 {
     if (_audioPlayer.playing) {

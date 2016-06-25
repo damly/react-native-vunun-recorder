@@ -51,6 +51,9 @@ var AudioRecorder = {
     playRecording: function() {
         AudioRecorderManager.playRecording();
     },
+    playAudio: function (path) {
+        AudioRecorderManager.playAudio(path);
+    },
     stopPlaying: function() {
         AudioRecorderManager.stopPlaying();
     },
