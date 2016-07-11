@@ -53,7 +53,7 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
             audioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             audioRecorder.setAudioChannels(Channels);
             audioRecorder.setAudioSamplingRate((int)SampleRate);
-            audioRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+            audioRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
 
             if(AudioQuality.equals("High")) {
                 audioQuality = "High";
@@ -91,7 +91,7 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
         params.putDouble("SampleRate", sampleRate);
         params.putInt("Channels", channels);
         params.putString("AudioQuality", audioQuality);
-        sendEvent(_reactContext, "recordingFinished", params);
+        sendEvent(_reactContext, "recordingErrorFinished", params);
     }
 
     private void recordingSuccess() {
@@ -104,6 +104,26 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
         sendEvent(_reactContext, "recordingFinished", params);
     }
 
+    private void playSuccess() {
+        WritableMap params = Arguments.createMap();
+        params.putBoolean("finished", true);
+        params.putString("File", audioFileName);
+        params.putDouble("SampleRate", sampleRate);
+        params.putInt("Channels", channels);
+        params.putString("AudioQuality", audioQuality);
+        sendEvent(_reactContext, "playFinished", params);
+    }
+
+    private void playFail(String err) {
+        WritableMap params = Arguments.createMap();
+        params.putBoolean("finished", false);
+        params.putString("message", err);
+        params.putString("File", audioFileName);
+        params.putDouble("SampleRate", sampleRate);
+        params.putInt("Channels", channels);
+        params.putString("AudioQuality", audioQuality);
+        sendEvent(_reactContext, "playErrorFinished", params);
+    }
 
     @ReactMethod
     public void startRecording() {
@@ -154,9 +174,27 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
                 recordingFail("stopRecording:"+e.getMessage());
             }
 
-          //  audioRecorder.release();
-           // audioRecorder = null;
+//            audioRecorder.release();
+//            audioRecorder = null;
         }
+    }
+
+    private void startPlayProgress() {
+
+        stopProgress();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                WritableMap params = Arguments.createMap();
+                params.putInt("currentTime", currentTime);
+                sendEvent(_reactContext, "playingProgress", params);
+                currentTime = currentTime + 1;
+
+            }
+        };
+        timer = new Timer();
+        timer.schedule(task, 1000, 1000);
     }
 
     @ReactMethod
@@ -175,7 +213,7 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
             audioPlayer.setDataSource(audioFileName);
             audioPlayer.prepare();
             audioPlayer.start();
-            startProgress();
+            startPlayProgress();
             audioPlayer.setOnCompletionListener(new OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -183,11 +221,11 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
                     audioPlayer.release();
                     audioPlayer = null;
                     stopProgress();
-                    recordingSuccess();
+                    playSuccess();
                 }
             });
         }catch (IOException ex) {
-            recordingFail("playRecording:"+ex.getMessage());
+            playFail("playRecording:"+ex.getMessage());
         }
 
     }
@@ -201,7 +239,7 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
             audioPlayer.setDataSource(file);
             audioPlayer.prepare();
             audioPlayer.start();
-            startProgress();
+            startPlayProgress();
             audioPlayer.setOnCompletionListener(new OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -209,11 +247,11 @@ public class AudioRecorderManagerModule extends ReactContextBaseJavaModule {
                     audioPlayer.release();
                     audioPlayer = null;
                     stopProgress();
-                    recordingSuccess();
+                    playSuccess();
                 }
             });
         }catch (IOException ex) {
-            recordingFail("playAudio:"+ex.getMessage());
+            playFail("playAudio:"+ex.getMessage());
         }
     }
 
