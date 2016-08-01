@@ -186,7 +186,7 @@ RCT_EXPORT_METHOD(playRecording)
             _audioPlayer = [[AVAudioPlayer alloc]
                             initWithContentsOfURL:_audioRecorder.url
                             error:&error];
-            
+            _audioPlayer.volume = 1;
             if (error) {
                 [self stopProgressTimer];
                 NSLog(@"audio playback loading error: %@", [error localizedDescription]);
@@ -214,7 +214,7 @@ RCT_EXPORT_METHOD(playAudio:(NSString *)path)
             _audioPlayer = [[AVAudioPlayer alloc]
                             initWithContentsOfURL:audioFileURL
                             error:&error];
-            
+            _audioPlayer.volume = 1;
             if (error) {
                 [self stopProgressTimer];
                 NSLog(@"audio playback loading error: %@", [error localizedDescription]);
